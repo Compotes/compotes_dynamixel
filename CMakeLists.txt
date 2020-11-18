@@ -138,7 +138,11 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/compotes_dynamixel_node.cpp)
 
-add_executable(init src/init.cpp)
+set(srcDir "src")
+set(servoDir "${srcDir}/servo")
+set(servoFiles "${servoDir}/Servo.h ${servoDir}/Servo.cpp")
+add_executable(init src/init.cpp src/servo/Servo.h src/servo/Servo.cpp)
+
 target_link_libraries(init ${catkin_LIBRARIES})
 # add_dependencies(init compotes_dynamixel)
 

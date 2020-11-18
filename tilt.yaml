@@ -15,7 +15,7 @@ joint1_velocity_controller:
     controller:
         package: dynamixel_controllers
         module: joint_velocity_controller
-        type: JointPositionController
+        type: JointVelocityController
     joint_name: claw_1f
     joint_speed: 1.0
     motor:
