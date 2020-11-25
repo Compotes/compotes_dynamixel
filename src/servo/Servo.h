@@ -20,9 +20,6 @@ using namespace dynamixel_msgs;
 class Servo {
 public:
     Servo(int id, NodeHandle *n);
-    string publisherTopic() const;
-    string subscriberTopic() const;
-    string clientService() const;
     
     bool isMoving() const;    
     int getId() const;
@@ -31,12 +28,16 @@ public:
     float getError() const;
     float getLoad() const;
     float getSpeed() const;
+    string to_string() const;
 
     void setSpeed(float speed);
     void setPosition(float pos);
-    
+
 private:
     void UpdateState(const dynamixel_msgs::MotorStateList::ConstPtr& msg);
+    string publisherTopic() const;
+    string subscriberTopic() const;
+    string clientService() const;
     
     int id;
     NodeHandle *nh;

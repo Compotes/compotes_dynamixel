@@ -61,3 +61,14 @@ void Servo::setSpeed(float speed) {
     data.request.speed = speed;
     client.call(data);
 }
+
+string Servo::to_string() const {
+    string s = "[";
+    s += " id : " + std::to_string(id);
+    s += "; goal : " + std::to_string(ms.goal);
+    s += "; pos : " + std::to_string(ms.position);
+    s += "; speed : " + std::to_string(ms.speed);
+    s += "]\n";
+    return s;
+}
+
