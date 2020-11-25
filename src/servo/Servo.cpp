@@ -1,37 +1,52 @@
 #include "Servo.h"
+#include<iostream>
 
-Servo::Servo(int id, NodeHandle *n, string topicName, int queueSize) {
+
+Servo::Servo(int id, NodeHandle *n) {
     this->id = id;
-    publisher = n->advertise<std_msgs::Float64>("/" +  topicName + "/command", queueSize);
-    subscriber = n->subscribe("/" +  topicName + "/state", queueSize, &Servo::UpdateState, this);
-    nh = n;
+    this->nh = n;
+    this->publisher = n->advertise<std_msgs::Float64>(publisherTopic(), QUEUE_SIZE);
+    this->subscriber = n->subscribe(subscriberTopic(), QUEUE_SIZE, &Servo::UpdateState, this);
 }
 
-void Servo::UpdateState(const dynamixel_msgs::JointState::ConstPtr& msg)
-{
-     goal_position = msg->goal_pos;
-     current_position = msg->current_pos;
-     error = msg->error;
-     load = msg->load;
-     moving = msg->is_moving;
+string Servo::subscriberTopic() const {
+    return MOTOR_STATES_TOPIC;
 }
 
-float Servo::GetGoalPosition() {
-    return goal_position;
+string Servo::publisherTopic() const {
+    return "/joint" + std::to_string(id) + "_controller/command";
 }
 
-float Servo::GetCurrentPosition() {
-    return current_position;
+void Servo::UpdateState(const dynamixel_msgs::MotorStateList::ConstPtr& msg) {
+    ms = msg->motor_states[id-1];
 }
 
-float Servo::GetError() {
-    return error;
+int Servo::getId() const {
+    return ms.id;
 }
 
-float Servo::GetLoad() {
-    return load;
+float Servo::getPosition() const {
+    return ms.position;
 }
 
-bool Servo::IsMoving() {
-    return moving;
+float Servo::getGoalPosition() const {
+    return ms.goal;
+}
+
+float Servo::getError() const {
+    return ms.error;
+}
+
+float Servo::getLoad() const {
+    return ms.load;
+}
+
+bool Servo::isMoving() const {
+    return ms.moving;
+}
+
+void Servo::setPosition(float pos) { // position in radians
+    std_msgs::Float64 msg;
+    msg.data = pos;
+    this->publisher.publish(msg);
 }
