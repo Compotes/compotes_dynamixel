@@ -8,6 +8,8 @@
 #include "dynamixel_msgs/MotorStateList.h"
 #include "dynamixel_msgs/JointState.h"
 
+#include "dynamixel_controllers/SetSpeed.h"
+
 #define MOTOR_STATES_TOPIC "/motor_states/pan_tilt_port"
 #define QUEUE_SIZE 1000
 
@@ -20,25 +22,25 @@ public:
     Servo(int id, NodeHandle *n);
     string publisherTopic() const;
     string subscriberTopic() const;
-        
+    string clientService() const;
+    
+    bool isMoving() const;    
     int getId() const;
     float getGoalPosition() const;
     float getPosition() const;
     float getError() const;
     float getLoad() const;
-    bool isMoving() const;
-    
+    float getSpeed() const;
+
+    void setSpeed(float speed);
     void setPosition(float pos);
-    
-    //TODO
-    float setSpeed() const;
-    float setSpeed();
     
 private:
     void UpdateState(const dynamixel_msgs::MotorStateList::ConstPtr& msg);
     
     int id;
     NodeHandle *nh;
+    ServiceClient client;
     Publisher publisher;
     Subscriber subscriber;
     MotorState ms;

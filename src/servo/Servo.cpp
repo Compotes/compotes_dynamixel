@@ -5,6 +5,7 @@
 Servo::Servo(int id, NodeHandle *n) {
     this->id = id;
     this->nh = n;
+    this->client = n->serviceClient<dynamixel_controllers::SetSpeed>(clientService());
     this->publisher = n->advertise<std_msgs::Float64>(publisherTopic(), QUEUE_SIZE);
     this->subscriber = n->subscribe(subscriberTopic(), QUEUE_SIZE, &Servo::UpdateState, this);
 }
@@ -15,6 +16,10 @@ string Servo::subscriberTopic() const {
 
 string Servo::publisherTopic() const {
     return "/joint" + std::to_string(id) + "_controller/command";
+}
+
+string Servo::clientService() const {
+    return "/joint" + std::to_string(id) + "_controller/set_speed";
 }
 
 void Servo::UpdateState(const dynamixel_msgs::MotorStateList::ConstPtr& msg) {
@@ -49,4 +54,10 @@ void Servo::setPosition(float pos) { // position in radians
     std_msgs::Float64 msg;
     msg.data = pos;
     this->publisher.publish(msg);
+}
+
+void Servo::setSpeed(float speed) {
+    dynamixel_controllers::SetSpeed data;
+    data.request.speed = speed;
+    client.call(data);
 }
