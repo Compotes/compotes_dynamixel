@@ -23,3 +23,16 @@ joint2_controller:
         init: 2048
         min: 0
         max: 4095
+
+joint3_controller:
+    controller:
+        package: dynamixel_controllers
+        module: joint_position_controller
+        type: JointPositionController
+    joint_name: claw_1l
+    joint_speed: 1.0
+    motor:
+        id: 3
+        init: 2048
+        min: 0
+        max: 4095

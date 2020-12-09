@@ -1,5 +1,7 @@
 #include "Servo.h"
-#include<iostream>
+
+#include <iostream>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 
 Servo::Servo(int id, NodeHandle *n) {
@@ -24,6 +26,11 @@ string Servo::clientService() const {
 
 void Servo::UpdateState(const dynamixel_msgs::MotorStateList::ConstPtr& msg) {
     ms = msg->motor_states[id-1];
+    
+    if (!onPosition && ms.error < 0.001) {
+        onPosition = true;
+        //volame joint nejak podla toho ci sme thread alebo nie
+    }
 }
 
 int Servo::getId() const {
@@ -53,7 +60,8 @@ bool Servo::isMoving() const {
 void Servo::setPosition(float pos) { // position in radians
     std_msgs::Float64 msg;
     msg.data = pos;
-    this->publisher.publish(msg);
+    onPosition = false;
+    publisher.publish(msg);
 }
 
 void Servo::setSpeed(float speed) {
@@ -62,7 +70,7 @@ void Servo::setSpeed(float speed) {
     this->client.call(data);
 }
 
-string Servo::to_string() const {
+string Servo::toString() const {
     string s = "[";
     s += " id : " + std::to_string(id);
     s += "; goal : " + std::to_string(ms.goal);
