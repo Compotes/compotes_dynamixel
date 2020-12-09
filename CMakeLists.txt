@@ -141,7 +141,11 @@ include_directories(
 set(servoFiles "src/servo/Servo.h")
 list(APPEND servoFiles "src/servo/Servo.cpp")
 
-add_executable(init src/init.cpp "${servoFiles}")
+set(jointFiles "src/joint/Joint.h")
+list(APPEND jointFiles "src/joint/Joint.cpp")
+
+
+add_executable(init src/init.cpp "${servoFiles}" "${jointFiles}")
 target_link_libraries(init ${catkin_LIBRARIES})
 
 add_executable(testing test/test.cpp "${servoFiles}")
