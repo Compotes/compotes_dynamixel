@@ -138,12 +138,15 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/compotes_dynamixel_node.cpp)
 
-set(srcDir "src")
-set(servoDir "${srcDir}/servo")
-set(servoFiles "${servoDir}/Servo.h ${servoDir}/Servo.cpp")
-add_executable(init src/init.cpp src/servo/Servo.h src/servo/Servo.cpp)
+set(servoFiles "src/servo/Servo.h")
+list(APPEND servoFiles "src/servo/Servo.cpp")
 
+add_executable(init src/init.cpp "${servoFiles}")
 target_link_libraries(init ${catkin_LIBRARIES})
+
+add_executable(testing test/test.cpp "${servoFiles}")
+target_link_libraries(testing ${catkin_LIBRARIES})
+
 # add_dependencies(init compotes_dynamixel)
 
 ## Rename C++ executable without prefix

@@ -59,7 +59,7 @@ void Servo::setPosition(float pos) { // position in radians
 void Servo::setSpeed(float speed) {
     dynamixel_controllers::SetSpeed data;
     data.request.speed = speed;
-    client.call(data);
+    this->client.call(data);
 }
 
 string Servo::to_string() const {
@@ -71,4 +71,3 @@ string Servo::to_string() const {
     s += "]\n";
     return s;
 }
-
